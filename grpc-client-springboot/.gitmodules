@@ -1,0 +1,3 @@
+[submodule "grpc-tutorial-common-entity"]
+	path = grpc-tutorial-common-entity
+	url = https://github.com/plzprayme/grpc-tutorial-common-entity.git

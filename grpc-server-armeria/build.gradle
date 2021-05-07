@@ -1,0 +1,63 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.32'
+    id 'com.google.protobuf' version '0.8.15'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = 1.8
+}
+
+sourceSets {
+    main {
+        proto {
+            srcDirs 'grpc-tutorial-common-entity/'
+        }
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.12.0"
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.37.0'
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+
+    // armeria
+    ['armeria',
+     'armeria-grpc'].each {
+        implementation "com.linecorp.armeria:${it}:1.7.2"
+    }
+
+    // logging
+    runtimeOnly 'ch.qos.logback:logback-classic:1.2.3'
+    runtimeOnly 'org.slf4j:log4j-over-slf4j:1.7.30'
+
+    // gRPC
+    implementation 'io.grpc:grpc-netty-shaded:1.37.0'
+    implementation 'io.grpc:grpc-protobuf:1.37.0'
+    implementation 'io.grpc:grpc-stub:1.37.0'
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
+}
